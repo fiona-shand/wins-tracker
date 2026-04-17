@@ -44,7 +44,7 @@
     0 0 0 1px rgba(255, 255, 255, 0.8) inset;
 }
 
-.pet-lottie-wrap {
+.pet-buddy-wrap {
   width: 100%;
   aspect-ratio: 1;
   min-height: 96px;
@@ -53,29 +53,11 @@
   justify-content: center;
 }
 
-.pet-lottie-canvas {
-  width: 100% !important;
-  height: 100% !important;
+.pet-buddy-svg {
+  width: 100%;
+  height: auto;
   max-height: 140px;
   display: block;
-}
-
-.pet-lottie-float {
-  position: absolute;
-  pointer-events: none;
-  user-select: none;
-  font-size: 0.85rem;
-  line-height: 1;
-}
-
-.pet-lottie-float--hunger {
-  top: 0.2rem;
-  right: 0.45rem;
-}
-
-.pet-lottie-float--hurt {
-  top: 0.45rem;
-  left: 0.55rem;
 }
 
 .pet-meters {
@@ -222,14 +204,14 @@
   margin: 0 auto;
 }
 
-.app-pet-page .pet-lottie-wrap {
+.app-pet-page .pet-buddy-wrap {
   min-height: 140px;
   max-height: min(48vh, 300px);
   aspect-ratio: 1;
 }
 
-.app-pet-page .pet-lottie-canvas {
-  max-height: min(48vh, 300px) !important;
+.app-pet-page .pet-buddy-svg {
+  max-height: min(48vh, 300px);
 }
 
 .app-pet-page .pet-meters {

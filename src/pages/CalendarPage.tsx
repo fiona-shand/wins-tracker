@@ -16,13 +16,18 @@ import { useTrackerUi } from '../useTrackerUi'
 export function CalendarPage() {
   const navigate = useNavigate()
   const {
-    trackedIds,
+    trackedHabits,
     completions,
     viewDate,
     setViewDate,
     calMonthOverride,
     setCalMonthOverride,
   } = useTrackerUi()
+
+  const habitIdsOnList = useMemo(
+    () => trackedHabits.map((h) => h.id),
+    [trackedHabits],
+  )
 
   const calendarMonth = calMonthOverride ?? startOfMonth(viewDate)
 
@@ -31,29 +36,33 @@ export function CalendarPage() {
     [calendarMonth],
   )
 
+  const todayKey = dateKey(new Date())
+
   const starDaysThisMonth = useMemo(() => {
-    if (trackedIds.length === 0) return 0
+    if (habitIdsOnList.length === 0) return 0
     let n = 0
     for (const { date, inCurrentMonth } of calCells) {
       if (!inCurrentMonth) continue
-      if (allHabitsDoneForDay(dateKey(date), trackedIds, completions)) n++
+      const k = dateKey(date)
+      if (k > todayKey) continue
+      if (allHabitsDoneForDay(k, habitIdsOnList, completions)) n++
     }
     return n
-  }, [calCells, trackedIds, completions])
+  }, [calCells, habitIdsOnList, completions, todayKey])
 
   const weekdayLabels = useMemo(() => weekdayNarrowLabels(), [])
 
   return (
     <div className="app app-calendar">
       <div className="shell">
-        <header className="brand brand-compact brand--calendar">
+        <header className="brand brand--calendar">
           <h1>Star calendar</h1>
           <p className="copy-prose">
             <span className="inline-badge inline-badge--yellow">⭐</span> marks a day when
             you closed{' '}
             <span className="inline-badge inline-badge--green">every habit</span> on your
             list.
-            {trackedIds.length > 0 && (
+            {habitIdsOnList.length > 0 && (
               <>
                 {' '}
                 This month:{' '}
@@ -86,7 +95,7 @@ export function CalendarPage() {
                 Month
               </h2>
               <p className="cal-sub cal-sub-center copy-prose">
-                {trackedIds.length === 0
+                {habitIdsOnList.length === 0
                   ? 'Add habits on Today — then star days appear here.'
                   : 'Tap a date to jump to that day on Today.'}
               </p>
@@ -116,12 +125,13 @@ export function CalendarPage() {
           <div className="cal-grid">
             {calCells.map(({ date, inCurrentMonth }) => {
               const k = dateKey(date)
+              const isFuture = k > todayKey
               const star =
-                trackedIds.length > 0 &&
-                allHabitsDoneForDay(k, trackedIds, completions)
+                habitIdsOnList.length > 0 &&
+                !isFuture &&
+                allHabitsDoneForDay(k, habitIdsOnList, completions)
               const isTodayCell = isSameDay(date, new Date())
               const isViewCell = isSameDay(date, viewDate)
-              const isFuture = k > dateKey(new Date())
 
               return (
                 <button

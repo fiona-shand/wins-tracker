@@ -1170,7 +1170,6 @@
 /* Habit bank: consistent rounded rects on every control */
 .sheet .bank-chip,
 .sheet .chip-remove,
-.sheet .habit-category-pick,
 .sheet .text-input,
 .sheet .done-btn,
 .sheet .add-btn {
@@ -1179,7 +1178,6 @@
 
 .sheet .bank-chip,
 .sheet .chip-remove,
-.sheet .habit-category-pick,
 .sheet .done-btn,
 .sheet .add-btn {
   -webkit-appearance: none;
@@ -1290,30 +1288,32 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--pill-blue) 35%, transparent);
 }
 
-.habit-category-row {
-  margin-bottom: 0.55rem;
+.add-category-pick {
+  margin: 0 0 0.65rem;
+  padding: 0.65rem 0.55rem 0.55rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: rgba(10, 10, 10, 0.02);
 }
 
-.habit-category-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  margin-bottom: 0.4rem;
+.add-category-pick-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
 }
 
-.habit-category-picks {
+.add-category-pick-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
 }
 
-.habit-category-pick {
+.add-category-pick-btn {
   flex: 1;
-  min-width: 5.5rem;
-  padding: 0.55rem 0.5rem;
+  min-width: 5.25rem;
+  padding: 0.5rem 0.4rem;
   border-radius: var(--r-md);
   border: 1px solid var(--card-border);
   background: #fff;
@@ -1322,34 +1322,45 @@
   font: inherit;
   box-shadow: var(--shadow-soft);
   transition:
-    border-color 0.18s ease,
-    background 0.18s ease,
-    color 0.18s ease;
+    border-color 0.16s ease,
+    background 0.16s ease;
 }
 
-.habit-category-pick.on {
-  border-color: #0a0a0a;
-  background: #0a0a0a;
-  color: #fff;
+.add-category-pick-btn:hover {
+  border-color: rgba(10, 10, 10, 0.22);
 }
 
-.habit-category-pick-title {
+.add-category-pick-btn-title {
   display: block;
   font-weight: 700;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
+  color: var(--ink);
 }
 
-.habit-category-pick-blurb {
+.add-category-pick-btn-hint {
   display: block;
-  font-size: 0.68rem;
+  margin-top: 0.12rem;
+  font-size: 0.65rem;
   font-weight: 500;
-  opacity: 0.8;
-  margin-top: 0.15rem;
+  color: var(--ink-soft);
   line-height: 1.25;
 }
 
-.habit-category-pick.on .habit-category-pick-blurb {
-  opacity: 0.88;
+.add-category-pick-cancel {
+  margin-top: 0.45rem;
+  width: 100%;
+  padding: 0.45rem;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.add-category-pick-cancel:hover {
+  color: var(--ink);
 }
 
 .sheet-actions {
@@ -1566,20 +1577,18 @@
 }
 
 .app-calendar .brand--calendar {
-  margin-bottom: 2rem;
+  margin-bottom: 2.1rem;
 }
 
 .app-calendar .brand--calendar h1 {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.05rem;
 }
 
-.app-calendar .brand--calendar .copy-prose {
+.app-calendar .brand--calendar > .copy-prose {
   margin: 0;
-  line-height: 1.65;
-  max-width: 28rem;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 0.2rem;
+  line-height: 1.68;
 }
 
 .app-calendar .cal-head {

@@ -1,10 +1,13 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
-import { BUDDY_CATEGORY_LABELS } from '../constants'
 import type { BuddyCategory } from '../types'
 import { useTrackerUi } from '../useTrackerUi'
 
-const BUDDY_CATS: BuddyCategory[] = ['full', 'joy', 'well']
+const METER_PICK: { id: BuddyCategory; label: string; hint: string }[] = [
+  { id: 'full', label: 'Full', hint: 'Meals, sleep, fuel' },
+  { id: 'joy', label: 'Joy', hint: 'Focus, read, log' },
+  { id: 'well', label: 'Well', hint: 'Train, outside, space' },
+]
 
 export function HabitBankSheet() {
   const {
@@ -19,9 +22,22 @@ export function HabitBankSheet() {
     setNewLabel,
   } = useTrackerUi()
 
-  const [newBuddyCategory, setNewBuddyCategory] = useState<BuddyCategory>('joy')
+  const [categoryPickFor, setCategoryPickFor] = useState<string | null>(null)
+
+  const closeSheet = () => {
+    setCategoryPickFor(null)
+    setSheetOpen(false)
+  }
 
   const customOnly = allHabits.filter((h) => h.id.startsWith('custom-'))
+
+  const finishAddWithCategory = (cat: BuddyCategory) => {
+    if (!categoryPickFor) return
+    if (addCustomHabit(categoryPickFor, cat)) {
+      setNewLabel('')
+      setCategoryPickFor(null)
+    }
+  }
 
   if (!sheetOpen) return null
 
@@ -30,7 +46,7 @@ export function HabitBankSheet() {
       className="overlay"
       role="presentation"
       onClick={(e) => {
-        if (e.target === e.currentTarget) setSheetOpen(false)
+        if (e.target === e.currentTarget) closeSheet()
       }}
     >
       <div
@@ -42,16 +58,16 @@ export function HabitBankSheet() {
       >
         <div className="sheet-handle" aria-hidden />
         <div className="sheet-head">
-          <h2 id="sheet-title">Habit bank</h2>
+          <h2 id="sheet-title">Habits</h2>
           <p>
-            Tap a habit to put it on your list (or take it off). That saves
-            right away — the form below is only for brand-new ideas.
+            Toggle presets onto your list — same vibe as 75 Hard, but lighter.
+            Add your own at the bottom if something’s missing.
           </p>
         </div>
         <div className="sheet-body">
           <div className="bank-presets">
             <p className="bank-hint" id="bank-hint">
-              Presets — tap to track
+              Presets
             </p>
             <div
               className="bank-grid"
@@ -79,7 +95,7 @@ export function HabitBankSheet() {
 
           {customOnly.length > 0 && (
             <div className="custom-list">
-              <h3>Your customs</h3>
+              <h3>Custom</h3>
               <div className="bank-presets bank-presets--tight">
                 <div className="bank-grid">
                   {customOnly.map((h) => {
@@ -111,52 +127,73 @@ export function HabitBankSheet() {
           )}
 
           <div className="add-row">
-            <h3>Add a tiny win</h3>
+            <h3>Add a habit</h3>
             <input
               className="text-input"
-              placeholder="e.g. Water the plants"
+              placeholder="e.g. Second walk, Meal prep block"
               value={newLabel}
-              onChange={(e) => setNewLabel(e.target.value)}
+              onChange={(e) => {
+                const v = e.target.value
+                setNewLabel(v)
+                const t = v.trim()
+                if (categoryPickFor !== null && t !== categoryPickFor) {
+                  setCategoryPickFor(null)
+                }
+              }}
               maxLength={48}
               aria-label="Habit name"
             />
-            <div className="habit-category-row">
-              <span className="habit-category-label">Buddy meter</span>
-              <div className="habit-category-picks" role="group" aria-label="Category for this habit">
-                {BUDDY_CATS.map((cat) => {
-                  const { title, blurb } = BUDDY_CATEGORY_LABELS[cat]
-                  const on = newBuddyCategory === cat
-                  return (
+            {categoryPickFor !== null && (
+              <div
+                className="add-category-pick"
+                role="group"
+                aria-labelledby="add-category-pick-label"
+              >
+                <p id="add-category-pick-label" className="add-category-pick-label">
+                  Can&apos;t tell from the name — which meter should it count toward?
+                </p>
+                <div className="add-category-pick-row">
+                  {METER_PICK.map(({ id, label, hint }) => (
                     <button
-                      key={cat}
+                      key={id}
                       type="button"
-                      className={`habit-category-pick${on ? ' on' : ''}`}
-                      aria-pressed={on}
-                      onClick={() => setNewBuddyCategory(cat)}
+                      className="add-category-pick-btn"
+                      onClick={() => finishAddWithCategory(id)}
                     >
-                      <span className="habit-category-pick-title">{title}</span>
-                      <span className="habit-category-pick-blurb">{blurb}</span>
+                      <span className="add-category-pick-btn-title">{label}</span>
+                      <span className="add-category-pick-btn-hint">{hint}</span>
                     </button>
-                  )
-                })}
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="add-category-pick-cancel"
+                  onClick={() => setCategoryPickFor(null)}
+                >
+                  Cancel
+                </button>
               </div>
-            </div>
+            )}
             <div className="sheet-actions sheet-actions-stack">
               <button
                 type="button"
                 className="done-btn"
-                onClick={() => setSheetOpen(false)}
+                onClick={closeSheet}
               >
                 Done — see my list
               </button>
               <button
                 type="button"
                 className="add-btn"
-                disabled={!newLabel.trim()}
+                disabled={!newLabel.trim() || categoryPickFor !== null}
                 onClick={() => {
-                  addCustomHabit(newLabel.trim(), newBuddyCategory)
-                  setNewLabel('')
-                  setNewBuddyCategory('joy')
+                  const t = newLabel.trim()
+                  if (addCustomHabit(t)) {
+                    setNewLabel('')
+                    setCategoryPickFor(null)
+                  } else {
+                    setCategoryPickFor(t)
+                  }
                 }}
               >
                 Add custom habit

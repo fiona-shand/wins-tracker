@@ -58,7 +58,7 @@ function PhoneShell() {
         <div className={`fab${sheetOpen ? ' fab-behind-sheet' : ''}`}>
           <button type="button" onClick={() => setSheetOpen(true)}>
             <Squares2X2Icon className="fab-glyph" aria-hidden />
-            Habit bank &amp; extras
+            Habits
           </button>
         </div>
       )}

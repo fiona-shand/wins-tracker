@@ -1,3 +1,4 @@
+import { RETIRED_BANK_HABIT_IDS } from './constants'
 import type { BuddyCategory, Habit, PersistedState } from './types'
 
 const KEY = 'tiny-wins-tracker-v1'
@@ -57,6 +58,21 @@ function normalizeHabit(raw: unknown): Habit | null {
   }
 }
 
+function pruneRetiredHabitIds(ids: string[]): string[] {
+  return ids.filter((id) => !RETIRED_BANK_HABIT_IDS.has(id))
+}
+
+function pruneRetiredFromCompletions(
+  completions: Record<string, string[]>,
+): Record<string, string[]> {
+  const out: Record<string, string[]> = {}
+  for (const [day, done] of Object.entries(completions)) {
+    const next = pruneRetiredHabitIds(done)
+    if (next.length > 0) out[day] = next
+  }
+  return out
+}
+
 export function loadPersisted(): PersistedState {
   try {
     const raw = localStorage.getItem(KEY)
@@ -70,14 +86,25 @@ export function loadPersisted(): PersistedState {
           .map(normalizeHabit)
           .filter((h): h is Habit => h !== null)
       : []
+    const trackedIds = Array.isArray(data.trackedIds)
+      ? data.trackedIds.filter((id): id is string => typeof id === 'string')
+      : []
+    const completionsRaw =
+      data.completions && typeof data.completions === 'object'
+        ? (data.completions as Record<string, string[]>)
+        : {}
+    const completions: Record<string, string[]> = {}
+    for (const [day, done] of Object.entries(completionsRaw)) {
+      if (!Array.isArray(done)) continue
+      const ids = done.filter((id): id is string => typeof id === 'string')
+      completions[day] = ids
+    }
+
     return {
       v: 1,
       customHabits: customs,
-      trackedIds: Array.isArray(data.trackedIds) ? data.trackedIds : [],
-      completions:
-        data.completions && typeof data.completions === 'object'
-          ? data.completions
-          : {},
+      trackedIds: pruneRetiredHabitIds(trackedIds),
+      completions: pruneRetiredFromCompletions(completions),
     }
   } catch {
     return { ...empty, completions: {} }

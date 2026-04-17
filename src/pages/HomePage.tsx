@@ -35,11 +35,11 @@ export function HomePage() {
             {total === 0 ? (
               <>
                 You&apos;re in{' '}
-                <span className="inline-badge inline-badge--slate">setup</span> — open
-                the bank and tag{' '}
-                <span className="inline-badge inline-badge--blue">3–5 habits</span> to
-                start logging{' '}
-                <span className="inline-badge inline-badge--yellow">tiny wins</span>.
+                <span className="inline-badge inline-badge--slate">setup</span> — open{' '}
+                <span className="inline-badge inline-badge--blue">Habits</span> and turn
+                on{' '}
+                <span className="inline-badge inline-badge--blue">3–5</span> you&apos;ll
+                actually run today.
               </>
             ) : (
               <>
@@ -62,16 +62,16 @@ export function HomePage() {
         {trackedHabits.length === 0 ? (
           <div className="empty-card">
             <p className="copy-prose">
-              No modules yet — pick habits so this screen fills with{' '}
-              <span className="inline-badge inline-badge--blue">check-ins</span> and{' '}
-              <span className="inline-badge inline-badge--yellow">streak fuel</span>.
+              Nothing on your list yet — add presets or your own rules from{' '}
+              <span className="inline-badge inline-badge--blue">Habits</span>, then work
+              the list.
             </p>
             <button
               type="button"
               className="primary-btn"
               onClick={() => setSheetOpen(true)}
             >
-              Open habit bank
+              Open Habits
             </button>
           </div>
         ) : (

@@ -1,12 +1,6 @@
-import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { motion } from 'motion/react'
+import { ExpressiveBuddy } from './ExpressiveBuddy'
 import { moodFromStats } from './petStore'
-
-/**
- * Animation: “teddy bear” by Ольга Стебанутых on LottieFiles (community, ~29KB .lottie).
- * License: Lottie Simple License — https://lottiefiles.com/page/license
- */
-const TEDDY_LOTTIE = `${import.meta.env.BASE_URL}pet/teddy-bear.lottie`
 
 type Props = {
   hunger: number
@@ -51,26 +45,9 @@ export function PetAvatar({ hunger, happiness, health }: Props) {
       style={{ filter }}
     >
       <div className="pet-scene">
-        <div className="pet-lottie-wrap">
-          <DotLottieReact
-            src={TEDDY_LOTTIE}
-            loop
-            autoplay
-            layout={{ fit: 'contain', align: [0.5, 0.52] }}
-            renderConfig={{ autoResize: true }}
-            className="pet-lottie-canvas"
-          />
+        <div className="pet-buddy-wrap">
+          <ExpressiveBuddy mood={mood} />
         </div>
-        {hunger < 35 && (
-          <span className="pet-lottie-float pet-lottie-float--hunger" aria-hidden>
-            💧
-          </span>
-        )}
-        {health < 38 && (
-          <span className="pet-lottie-float pet-lottie-float--hurt" aria-hidden>
-            🩹
-          </span>
-        )}
       </div>
     </motion.div>
   )
