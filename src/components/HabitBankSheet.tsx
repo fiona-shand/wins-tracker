@@ -1,6 +1,10 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { EMOJI_PICKS } from '../constants'
+import { useState } from 'react'
+import { BUDDY_CATEGORY_LABELS } from '../constants'
+import type { BuddyCategory } from '../types'
 import { useTrackerUi } from '../useTrackerUi'
+
+const BUDDY_CATS: BuddyCategory[] = ['full', 'joy', 'well']
 
 export function HabitBankSheet() {
   const {
@@ -13,9 +17,9 @@ export function HabitBankSheet() {
     setSheetOpen,
     newLabel,
     setNewLabel,
-    newEmoji,
-    setNewEmoji,
   } = useTrackerUi()
+
+  const [newBuddyCategory, setNewBuddyCategory] = useState<BuddyCategory>('joy')
 
   const customOnly = allHabits.filter((h) => h.id.startsWith('custom-'))
 
@@ -45,84 +49,69 @@ export function HabitBankSheet() {
           </p>
         </div>
         <div className="sheet-body">
-          <p className="bank-hint" id="bank-hint">
-            Presets — tap to track
-          </p>
-          <div
-            className="bank-grid"
-            role="group"
-            aria-describedby="bank-hint"
-          >
-            {allHabits
-              .filter((h) => !h.id.startsWith('custom-'))
-              .map((h) => {
-                const on = trackedIds.includes(h.id)
-                return (
-                  <button
-                    key={h.id}
-                    type="button"
-                    className={`bank-chip ${on ? 'on' : ''}`}
-                    onClick={() => toggleTracked(h.id)}
-                    aria-pressed={on}
-                  >
-                    <span className="e" aria-hidden>
-                      {h.emoji}
-                    </span>
-                    <span className="t">{h.label}</span>
-                  </button>
-                )
-              })}
+          <div className="bank-presets">
+            <p className="bank-hint" id="bank-hint">
+              Presets — tap to track
+            </p>
+            <div
+              className="bank-grid"
+              role="group"
+              aria-describedby="bank-hint"
+            >
+              {allHabits
+                .filter((h) => !h.id.startsWith('custom-'))
+                .map((h) => {
+                  const on = trackedIds.includes(h.id)
+                  return (
+                    <button
+                      key={h.id}
+                      type="button"
+                      className={`bank-chip ${on ? 'on' : ''}`}
+                      onClick={() => toggleTracked(h.id)}
+                      aria-pressed={on}
+                    >
+                      <span className="t">{h.label}</span>
+                    </button>
+                  )
+                })}
+            </div>
           </div>
 
           {customOnly.length > 0 && (
             <div className="custom-list">
               <h3>Your customs</h3>
-              <div className="bank-grid">
-                {customOnly.map((h) => {
-                  const on = trackedIds.includes(h.id)
-                  return (
-                    <div key={h.id} className="custom-chip-wrap">
-                      <button
-                        type="button"
-                        className={`bank-chip ${on ? 'on' : ''}`}
-                        onClick={() => toggleTracked(h.id)}
-                        aria-pressed={on}
-                      >
-                        <span className="e" aria-hidden>
-                          {h.emoji}
-                        </span>
-                        <span className="t">{h.label}</span>
-                      </button>
-                      <button
-                        type="button"
-                        className="chip-remove"
-                        aria-label={`Remove ${h.label}`}
-                        onClick={() => removeCustomHabit(h.id)}
-                      >
-                        <XMarkIcon className="chip-remove-icon" aria-hidden />
-                      </button>
-                    </div>
-                  )
-                })}
+              <div className="bank-presets bank-presets--tight">
+                <div className="bank-grid">
+                  {customOnly.map((h) => {
+                    const on = trackedIds.includes(h.id)
+                    return (
+                      <div key={h.id} className="custom-chip-wrap">
+                        <button
+                          type="button"
+                          className={`bank-chip ${on ? 'on' : ''}`}
+                          onClick={() => toggleTracked(h.id)}
+                          aria-pressed={on}
+                        >
+                          <span className="t">{h.label}</span>
+                        </button>
+                        <button
+                          type="button"
+                          className="chip-remove"
+                          aria-label={`Remove ${h.label}`}
+                          onClick={() => removeCustomHabit(h.id)}
+                        >
+                          <XMarkIcon className="chip-remove-icon" aria-hidden />
+                        </button>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           )}
 
           <div className="add-row">
             <h3>Add a tiny win</h3>
-            <div className="emoji-row" role="group" aria-label="Emoji">
-              {EMOJI_PICKS.map((e) => (
-                <button
-                  key={e}
-                  type="button"
-                  className={`emoji-pick ${newEmoji === e ? 'on' : ''}`}
-                  onClick={() => setNewEmoji(e)}
-                  aria-pressed={newEmoji === e}
-                >
-                  {e}
-                </button>
-              ))}
-            </div>
             <input
               className="text-input"
               placeholder="e.g. Water the plants"
@@ -131,6 +120,27 @@ export function HabitBankSheet() {
               maxLength={48}
               aria-label="Habit name"
             />
+            <div className="habit-category-row">
+              <span className="habit-category-label">Buddy meter</span>
+              <div className="habit-category-picks" role="group" aria-label="Category for this habit">
+                {BUDDY_CATS.map((cat) => {
+                  const { title, blurb } = BUDDY_CATEGORY_LABELS[cat]
+                  const on = newBuddyCategory === cat
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      className={`habit-category-pick${on ? ' on' : ''}`}
+                      aria-pressed={on}
+                      onClick={() => setNewBuddyCategory(cat)}
+                    >
+                      <span className="habit-category-pick-title">{title}</span>
+                      <span className="habit-category-pick-blurb">{blurb}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
             <div className="sheet-actions sheet-actions-stack">
               <button
                 type="button"
@@ -144,8 +154,9 @@ export function HabitBankSheet() {
                 className="add-btn"
                 disabled={!newLabel.trim()}
                 onClick={() => {
-                  addCustomHabit(newLabel, newEmoji)
+                  addCustomHabit(newLabel.trim(), newBuddyCategory)
                   setNewLabel('')
+                  setNewBuddyCategory('joy')
                 }}
               >
                 Add custom habit

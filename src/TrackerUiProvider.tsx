@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from 'react'
-import { EMOJI_PICKS } from './constants'
 import { TrackerUiContext, type TrackerUi } from './trackerContext'
 import { useWinsTracker } from './useWinsTracker'
 
@@ -9,7 +8,6 @@ export function TrackerUiProvider({ children }: { children: ReactNode }) {
   const [calMonthOverride, setCalMonthOverride] = useState<Date | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [newLabel, setNewLabel] = useState('')
-  const [newEmoji, setNewEmoji] = useState(EMOJI_PICKS[0])
 
   const value: TrackerUi = {
     ...tracker,
@@ -21,8 +19,6 @@ export function TrackerUiProvider({ children }: { children: ReactNode }) {
     setSheetOpen,
     newLabel,
     setNewLabel,
-    newEmoji,
-    setNewEmoji,
   }
 
   return (

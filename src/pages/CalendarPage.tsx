@@ -46,11 +46,10 @@ export function CalendarPage() {
   return (
     <div className="app app-calendar">
       <div className="shell">
-        <header className="brand brand-compact">
-          <div className="brand-badge">Streak radar</div>
+        <header className="brand brand-compact brand--calendar">
           <h1>Star calendar</h1>
           <p className="copy-prose">
-            <span className="inline-badge inline-badge--yellow">★</span> marks a day when
+            <span className="inline-badge inline-badge--yellow">⭐</span> marks a day when
             you closed{' '}
             <span className="inline-badge inline-badge--green">every habit</span> on your
             list.
@@ -88,7 +87,7 @@ export function CalendarPage() {
               </h2>
               <p className="cal-sub cal-sub-center copy-prose">
                 {trackedIds.length === 0
-                  ? 'Add habits on Today — then ⭐ days appear here.'
+                  ? 'Add habits on Today — then star days appear here.'
                   : 'Tap a date to jump to that day on Today.'}
               </p>
             </div>
@@ -145,7 +144,7 @@ export function CalendarPage() {
                   }}
                   aria-label={
                     star
-                      ? `${date.getDate()}, all habits done, star day`
+                      ? `${date.getDate()}, all habits done, star day ⭐`
                       : `${date.getDate()}, open this day`
                   }
                   aria-current={isViewCell ? 'date' : undefined}
@@ -153,7 +152,7 @@ export function CalendarPage() {
                   <span className="cal-daynum">{date.getDate()}</span>
                   {star ? (
                     <span className="cal-star" aria-hidden>
-                      ★
+                      ⭐
                     </span>
                   ) : (
                     <span className="cal-star-spacer" aria-hidden />

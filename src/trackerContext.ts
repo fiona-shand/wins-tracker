@@ -10,8 +10,6 @@ export type TrackerUi = ReturnType<typeof useWinsTracker> & {
   setSheetOpen: Dispatch<SetStateAction<boolean>>
   newLabel: string
   setNewLabel: Dispatch<SetStateAction<string>>
-  newEmoji: string
-  setNewEmoji: Dispatch<SetStateAction<string>>
 }
 
 export const TrackerUiContext = createContext<TrackerUi | null>(null)

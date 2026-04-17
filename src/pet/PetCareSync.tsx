@@ -11,22 +11,15 @@ export function PetCareSync() {
   const { trackedHabits, completions } = useTrackerUi()
   const dayKey = dateKey(new Date())
 
-  const doneSet = useMemo(
-    () => new Set(completions[dayKey] ?? []),
+  const doneIds = useMemo(
+    () => completions[dayKey] ?? [],
     [completions, dayKey],
   )
 
-  const { total, pct } = useMemo(() => {
-    const total = trackedHabits.length
-    const doneCount = trackedHabits.filter((h) => doneSet.has(h.id)).length
-    const pct = total === 0 ? 0 : Math.round((doneCount / total) * 100)
-    return { total, pct }
-  }, [trackedHabits, doneSet])
-
   usePetCareEffects({
     dayKey,
-    total,
-    pct,
+    trackedHabits,
+    doneIds,
     active: true,
   })
 

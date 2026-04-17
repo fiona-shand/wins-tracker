@@ -1,30 +1,36 @@
 import { useEffect, useRef } from 'react'
+import type { Habit } from '../types'
 import { usePetStore } from './petStore'
 
 type Params = {
   dayKey: string
-  total: number
-  pct: number
+  trackedHabits: Habit[]
+  doneIds: string[]
   /** When false, skip syncing (historic / inactive timeline). */
   active: boolean
 }
 
 /**
- * Keeps buddy meters aligned with today’s habit list: bars move when % changes.
+ * Keeps buddy meters aligned with today’s completions per Full / Joy / Well.
  * Waits for persist rehydration so stored values don’t overwrite a fresh sync.
  */
-export function usePetCareEffects({ dayKey, total, pct, active }: Params) {
+export function usePetCareEffects({
+  dayKey,
+  trackedHabits,
+  doneIds,
+  active,
+}: Params) {
   const syncFromHabits = usePetStore((s) => s.syncFromHabits)
-  const latest = useRef({ total, pct, active })
+  const latest = useRef({ trackedHabits, doneIds, active })
 
   useEffect(() => {
-    latest.current = { total, pct, active }
+    latest.current = { trackedHabits, doneIds, active }
     if (!active) return
 
     const run = () => {
-      const { total: t, pct: p, active: a } = latest.current
+      const { trackedHabits: th, doneIds: ids, active: a } = latest.current
       if (!a) return
-      syncFromHabits(t, p)
+      syncFromHabits(th, ids)
     }
 
     if (usePetStore.persist.hasHydrated()) {
@@ -35,5 +41,5 @@ export function usePetCareEffects({ dayKey, total, pct, active }: Params) {
     return usePetStore.persist.onFinishHydration(() => {
       run()
     })
-  }, [active, dayKey, total, pct, syncFromHabits])
+  }, [active, dayKey, trackedHabits, doneIds, syncFromHabits])
 }

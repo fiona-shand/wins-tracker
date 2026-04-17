@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { getBuddyCategory } from '../buddyCategory'
+import type { BuddyCategory, Habit } from '../types'
 
 const clamp = (n: number) => Math.max(0, Math.min(100, n))
 
@@ -41,20 +43,42 @@ type PetState = {
   hunger: number
   happiness: number
   health: number
-  /** Single source of truth: meters follow today’s habit completion %. */
-  syncFromHabits: (total: number, pct: number) => void
+  /** Meters follow habits you completed today, by buddy category (Full / Joy / Well). */
+  syncFromHabits: (trackedHabits: Habit[], doneIds: string[]) => void
 }
 
-function metersForProgress(total: number, pct: number) {
-  if (total === 0) {
+/** When you don’t track any habit in a category, that bar rests here. */
+const IDLE_METER = 54
+
+function pctForCategory(
+  habits: Habit[],
+  doneSet: Set<string>,
+  category: BuddyCategory,
+): number | null {
+  const rows = habits.filter((h) => getBuddyCategory(h) === category)
+  if (rows.length === 0) return null
+  const done = rows.filter((h) => doneSet.has(h.id)).length
+  return Math.round((done / rows.length) * 100)
+}
+
+function metersForTrackedDay(trackedHabits: Habit[], doneSet: Set<string>) {
+  if (trackedHabits.length === 0) {
     return { hunger: 72, happiness: 76, health: 70 }
   }
-  const t = pct / 100
-  const lerp = (a: number, b: number) => Math.round(a + (b - a) * t)
+
+  const fullPct = pctForCategory(trackedHabits, doneSet, 'full')
+  const joyPct = pctForCategory(trackedHabits, doneSet, 'joy')
+  const wellPct = pctForCategory(trackedHabits, doneSet, 'well')
+
+  const map = (pct: number | null, lo: number, hi: number) => {
+    if (pct === null) return IDLE_METER
+    return clamp(Math.round(lo + (pct / 100) * (hi - lo)))
+  }
+
   return {
-    hunger: clamp(lerp(30, 92)),
-    happiness: clamp(lerp(36, 96)),
-    health: clamp(lerp(28, 90)),
+    hunger: map(fullPct, 30, 92),
+    happiness: map(joyPct, 36, 96),
+    health: map(wellPct, 28, 90),
   }
 }
 
@@ -65,8 +89,10 @@ export const usePetStore = create<PetState>()(
       happiness: 82,
       health: 86,
 
-      syncFromHabits: (total, pct) =>
-        set(() => metersForProgress(total, pct)),
+      syncFromHabits: (trackedHabits, doneIds) =>
+        set(() =>
+          metersForTrackedDay(trackedHabits, new Set(doneIds)),
+        ),
     }),
     {
       name: 'tiny-wins-pet-v1',

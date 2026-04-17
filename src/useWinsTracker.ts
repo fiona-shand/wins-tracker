@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { HABIT_BANK } from './constants'
 import { loadPersisted, savePersisted } from './storage'
-import type { Habit } from './types'
+import type { BuddyCategory, Habit } from './types'
 
 function habitById(all: Habit[], id: string): Habit | undefined {
   return all.find((h) => h.id === id)
@@ -41,11 +41,16 @@ export function useWinsTracker() {
     )
   }, [])
 
-  const addCustomHabit = useCallback((label: string, emoji: string) => {
+  const addCustomHabit = useCallback((label: string, buddyCategory: BuddyCategory) => {
     const trimmed = label.trim()
     if (!trimmed) return
     const id = `custom-${crypto.randomUUID().slice(0, 10)}`
-    const habit: Habit = { id, label: trimmed, emoji: emoji || '🌟' }
+    const habit: Habit = {
+      id,
+      label: trimmed,
+      emoji: '',
+      buddyCategory,
+    }
     setCustomHabits((prev) => [...prev, habit])
     setTrackedIds((prev) => [...prev, id])
   }, [])

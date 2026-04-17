@@ -26,7 +26,6 @@ export function PetPage() {
     <div className="app app-pet-page">
       <div className="shell shell--pet">
         <header className="brand brand-compact brand--pet">
-          <div className="brand-badge">Win-buddy</div>
           <h1>Buddy deck</h1>
         </header>
 

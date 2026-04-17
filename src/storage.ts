@@ -1,4 +1,4 @@
-import type { Habit, PersistedState } from './types'
+import type { BuddyCategory, Habit, PersistedState } from './types'
 
 const KEY = 'tiny-wins-tracker-v1'
 
@@ -29,21 +29,32 @@ const empty: PersistedState = {
   completions: {},
 }
 
+function isBuddyCategory(x: unknown): x is BuddyCategory {
+  return x === 'full' || x === 'joy' || x === 'well'
+}
+
 function normalizeHabit(raw: unknown): Habit | null {
   if (!raw || typeof raw !== 'object') return null
   const o = raw as Record<string, unknown>
   if (typeof o.id !== 'string' || typeof o.label !== 'string') return null
 
+  const buddyCategory = isBuddyCategory(o.buddyCategory) ? o.buddyCategory : undefined
+
   if (typeof o.emoji === 'string' && o.emoji.length > 0) {
-    return { id: o.id, label: o.label, emoji: o.emoji }
+    return { id: o.id, label: o.label, emoji: o.emoji, buddyCategory }
   }
 
   if (typeof o.iconId === 'string') {
-    const emoji = LEGACY_ICON_TO_EMOJI[o.iconId] ?? '🌟'
-    return { id: o.id, label: o.label, emoji }
+    const emoji = LEGACY_ICON_TO_EMOJI[o.iconId] ?? ''
+    return { id: o.id, label: o.label, emoji, buddyCategory }
   }
 
-  return { id: o.id, label: o.label, emoji: '🌟' }
+  return {
+    id: o.id,
+    label: o.label,
+    emoji: typeof o.emoji === 'string' ? o.emoji : '',
+    buddyCategory,
+  }
 }
 
 export function loadPersisted(): PersistedState {

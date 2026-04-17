@@ -1,5 +1,5 @@
-import { CheckIcon } from '@heroicons/react/24/outline'
 import { useMemo } from 'react'
+import { TodayHabitList } from '../components/TodayHabitList'
 import { dateKey } from '../dates'
 import { useTrackerUi } from '../useTrackerUi'
 
@@ -27,9 +27,9 @@ export function HomePage() {
   }, [trackedHabits, doneSet])
 
   return (
-    <div className="app">
+    <div className="app app-home">
       <div className="shell">
-        <header className="brand">
+        <header className="brand brand--home">
           <h1>Tiny Wins</h1>
           <p className="copy-prose">
             {total === 0 ? (
@@ -75,36 +75,13 @@ export function HomePage() {
             </button>
           </div>
         ) : (
-          <div className="habit-bento bento-tile bento-tile--blush">
-            <div className="habit-list" role="list">
-              {trackedHabits.map((h) => {
-                const done = doneSet.has(h.id)
-                return (
-                  <button
-                    key={h.id}
-                    type="button"
-                    role="listitem"
-                    className={`habit-row ${done ? 'done' : ''}`}
-                    onClick={() => toggleCompleted(dayKey, h.id)}
-                    aria-pressed={done}
-                  >
-                    <span className="check" aria-hidden>
-                      <CheckIcon className="check-glyph" strokeWidth={2.75} />
-                    </span>
-                    <span className="habit-emoji" aria-hidden>
-                      {h.emoji}
-                    </span>
-                    <span className="habit-text">
-                      <strong>{h.label}</strong>
-                      <span>
-                        {done ? 'Nice! Logged for this day.' : 'Tap when done'}
-                      </span>
-                    </span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
+          <TodayHabitList
+            key={dayKey}
+            dayKey={dayKey}
+            trackedHabits={trackedHabits}
+            doneSet={doneSet}
+            toggleCompleted={toggleCompleted}
+          />
         )}
       </div>
     </div>

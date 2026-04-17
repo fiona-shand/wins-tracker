@@ -14,17 +14,8 @@
   margin-bottom: 0.65rem;
 }
 
-.pet-panel-title {
-  margin: 0;
-  font-family: 'Syne', 'DM Sans', system-ui, sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-
 .pet-panel-sub {
-  margin: 0.35rem 0 0;
+  margin: 0;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--ink-soft);

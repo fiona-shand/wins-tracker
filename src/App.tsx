@@ -27,7 +27,7 @@ function PhoneShell() {
   const showHabitFab = pathname === '/' || pathname === '/buddy'
 
   return (
-    <div className="phone-screen">
+    <div className="phone-screen" id="phone-stage">
       <PetCareSync />
       <div className="phone-content">
         <Routes>
