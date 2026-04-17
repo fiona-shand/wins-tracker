@@ -45,14 +45,25 @@ export function CalendarPage() {
 
   return (
     <div className="app app-calendar">
-      <div className="bg-blobs" aria-hidden />
-
       <div className="shell">
         <header className="brand brand-compact">
-          <div className="brand-badge">Your streak</div>
+          <div className="brand-badge">Streak radar</div>
           <h1>Star calendar</h1>
-          <p>
-            ⭐ shows days you finished every habit.
+          <p className="copy-prose">
+            <span className="inline-badge inline-badge--yellow">★</span> marks a day when
+            you closed{' '}
+            <span className="inline-badge inline-badge--green">every habit</span> on your
+            list.
+            {trackedIds.length > 0 && (
+              <>
+                {' '}
+                This month:{' '}
+                <span className="inline-badge inline-badge--blue">
+                  {starDaysThisMonth} star{starDaysThisMonth === 1 ? '' : 's'}
+                </span>
+                .
+              </>
+            )}
           </p>
         </header>
 
@@ -75,12 +86,10 @@ export function CalendarPage() {
               <h2 id="cal-heading" className="sr-only">
                 Month
               </h2>
-              <p className="cal-sub cal-sub-center">
+              <p className="cal-sub cal-sub-center copy-prose">
                 {trackedIds.length === 0
-                  ? `${formatMonthYear(calendarMonth)} — add habits on Today to earn stars.`
-                  : starDaysThisMonth === 0
-                    ? `${formatMonthYear(calendarMonth)} — your stars will land here.`
-                    : `${starDaysThisMonth} star day${starDaysThisMonth === 1 ? '' : 's'} this month ✨`}
+                  ? 'Add habits on Today — then ⭐ days appear here.'
+                  : 'Tap a date to jump to that day on Today.'}
               </p>
             </div>
             <button
@@ -99,8 +108,8 @@ export function CalendarPage() {
           </div>
           <p className="cal-month-banner">{formatMonthYear(calendarMonth)}</p>
           <div className="cal-weekdays">
-            {weekdayLabels.map((w) => (
-              <span key={w} className="cal-wd">
+            {weekdayLabels.map((w, i) => (
+              <span key={i} className="cal-wd">
                 {w}
               </span>
             ))}
@@ -144,7 +153,7 @@ export function CalendarPage() {
                   <span className="cal-daynum">{date.getDate()}</span>
                   {star ? (
                     <span className="cal-star" aria-hidden>
-                      ⭐
+                      ★
                     </span>
                   ) : (
                     <span className="cal-star-spacer" aria-hidden />

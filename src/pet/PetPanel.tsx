@@ -88,12 +88,31 @@ export function PetPanel({ dayKey, doneCount, total, pct, isToday }: Props) {
         <h2 id="pet-heading" className="pet-panel-title">
           Your win-buddy
         </h2>
-        <p className="pet-panel-sub">
-          {total === 0
-            ? 'Add habits — then keeping them happy keeps me happy.'
-            : !isToday
-              ? 'I live on today’s list. Jump back to feed me with wins!'
-              : hint}
+        <p className="pet-panel-sub copy-prose">
+          {total === 0 ? (
+            <>
+              Link{' '}
+              <span className="inline-badge inline-badge--blue">habits</span> on Today —
+              then every check-in hits my{' '}
+              <span className="inline-badge inline-badge--green">meters</span>.
+            </>
+          ) : !isToday ? (
+            <>
+              I sync to{' '}
+              <span className="inline-badge inline-badge--yellow">today only</span> — jump
+              back to Today to feed me with{' '}
+              <span className="inline-badge inline-badge--rose">wins</span>.
+            </>
+          ) : (
+            <>
+              {hint}{' '}
+              <span className="inline-badge inline-badge--slate">
+                {doneCount}/{total}
+              </span>{' '}
+              ·{' '}
+              <span className="inline-badge inline-badge--yellow">{pct}%</span>
+            </>
+          )}
         </p>
       </div>
 

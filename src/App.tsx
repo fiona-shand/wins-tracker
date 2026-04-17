@@ -1,4 +1,5 @@
 import { Squares2X2Icon } from '@heroicons/react/24/outline'
+import { lazy, Suspense } from 'react'
 import {
   BrowserRouter,
   Navigate,
@@ -10,10 +11,14 @@ import { HabitBankSheet } from './components/HabitBankSheet'
 import { TabBar } from './components/TabBar'
 import { CalendarPage } from './pages/CalendarPage'
 import { HomePage } from './pages/HomePage'
-import { PetPage } from './pages/PetPage'
 import { TrackerUiProvider } from './TrackerUiProvider'
 import { useTrackerUi } from './useTrackerUi'
 import './App.css'
+
+const PetPage = lazy(async () => {
+  const m = await import('./pages/PetPage')
+  return { default: m.PetPage }
+})
 
 function PhoneShell() {
   const { pathname } = useLocation()
@@ -25,7 +30,24 @@ function PhoneShell() {
       <div className="phone-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/buddy" element={<PetPage />} />
+          <Route
+            path="/buddy"
+            element={
+              <Suspense
+                fallback={
+                  <div className="app app-pet-page">
+                    <div className="shell">
+                      <p className="pet-page-note" style={{ marginTop: '2rem' }}>
+                        Loading buddy…
+                      </p>
+                    </div>
+                  </div>
+                }
+              >
+                <PetPage />
+              </Suspense>
+            }
+          />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

@@ -24,20 +24,40 @@ export function PetPage() {
 
   return (
     <div className="app app-pet-page">
-      <div className="bg-blobs" aria-hidden />
-
       <div className="shell">
         <header className="brand brand-compact">
           <div className="brand-badge">Win-buddy</div>
-          <h1>Your Tamagotchi</h1>
-          <p>
-            They eat your tiny wins. Finish today’s habits to keep them glowing.
+          <h1>Buddy deck</h1>
+          <p className="copy-prose">
+            Care runs on{' '}
+            <span className="inline-badge inline-badge--yellow">today&apos;s list</span>
+            . Finish habits to push{' '}
+            {total > 0 ? (
+              <span className="inline-badge inline-badge--green">
+                {doneCount}/{total}
+              </span>
+            ) : (
+              <span className="inline-badge inline-badge--green">0 habits</span>
+            )}{' '}
+            {total > 0 ? (
+              <>
+                — that&apos;s{' '}
+                <span className="inline-badge inline-badge--blue">{pct}%</span> fed in.
+              </>
+            ) : (
+              <>
+                — add{' '}
+                <span className="inline-badge inline-badge--rose">habits</span> on Today
+                first.
+              </>
+            )}
           </p>
         </header>
 
-        <p className="pet-page-note">
-          Care stats always follow <strong>today</strong> — check habits on the
-          Today tab.
+        <p className="pet-page-note copy-prose">
+          Meters always track{' '}
+          <span className="inline-badge inline-badge--slate">live today</span> — flip to
+          Today to log wins.
         </p>
 
         <div className="pet-page-panel">
