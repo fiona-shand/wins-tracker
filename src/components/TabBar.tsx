@@ -1,4 +1,8 @@
-import { CheckCircleIcon, StarIcon } from '@heroicons/react/24/outline'
+import {
+  CheckCircleIcon,
+  HeartIcon,
+  StarIcon,
+} from '@heroicons/react/24/outline'
 import { NavLink } from 'react-router-dom'
 
 export function TabBar() {
@@ -11,6 +15,13 @@ export function TabBar() {
       >
         <CheckCircleIcon className="tab-bar-ico" aria-hidden />
         <span>Today</span>
+      </NavLink>
+      <NavLink
+        to="/buddy"
+        className={({ isActive }) => `tab-bar-link${isActive ? ' active' : ''}`}
+      >
+        <HeartIcon className="tab-bar-ico" aria-hidden />
+        <span>Buddy</span>
       </NavLink>
       <NavLink
         to="/calendar"
