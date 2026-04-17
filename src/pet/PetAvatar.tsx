@@ -44,6 +44,7 @@ export function PetAvatar({ hunger, happiness, health }: Props) {
 
   return (
     <motion.div
+      key={mood}
       className="pet-avatar"
       animate={bodyAnim}
       transition={bodyTransition}

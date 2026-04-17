@@ -41,11 +41,21 @@ type PetState = {
   hunger: number
   happiness: number
   health: number
-  boostFromHabit: () => void
-  slightLetdown: () => void
-  decayMissedCare: () => void
-  celebrateAllDone: () => void
-  idleRecover: () => void
+  /** Single source of truth: meters follow today’s habit completion %. */
+  syncFromHabits: (total: number, pct: number) => void
+}
+
+function metersForProgress(total: number, pct: number) {
+  if (total === 0) {
+    return { hunger: 72, happiness: 76, health: 70 }
+  }
+  const t = pct / 100
+  const lerp = (a: number, b: number) => Math.round(a + (b - a) * t)
+  return {
+    hunger: clamp(lerp(30, 92)),
+    happiness: clamp(lerp(36, 96)),
+    health: clamp(lerp(28, 90)),
+  }
 }
 
 export const usePetStore = create<PetState>()(
@@ -55,41 +65,16 @@ export const usePetStore = create<PetState>()(
       happiness: 82,
       health: 86,
 
-      boostFromHabit: () =>
-        set((s) => ({
-          hunger: clamp(s.hunger + 7),
-          happiness: clamp(s.happiness + 9),
-          health: clamp(s.health + 4),
-        })),
-
-      slightLetdown: () =>
-        set((s) => ({
-          hunger: clamp(s.hunger - 3),
-          happiness: clamp(s.happiness - 4),
-          health: clamp(s.health - 2),
-        })),
-
-      decayMissedCare: () =>
-        set((s) => ({
-          hunger: clamp(s.hunger - 4),
-          happiness: clamp(s.happiness - 5),
-          health: clamp(s.health - 3),
-        })),
-
-      celebrateAllDone: () =>
-        set((s) => ({
-          hunger: clamp(s.hunger + 12),
-          happiness: clamp(s.happiness + 14),
-          health: clamp(s.health + 10),
-        })),
-
-      idleRecover: () =>
-        set((s) => ({
-          hunger: clamp(s.hunger + 1.2),
-          happiness: clamp(s.happiness + 1.2),
-          health: clamp(s.health + 0.8),
-        })),
+      syncFromHabits: (total, pct) =>
+        set(() => metersForProgress(total, pct)),
     }),
-    { name: 'tiny-wins-pet-v1' },
+    {
+      name: 'tiny-wins-pet-v1',
+      partialize: (s) => ({
+        hunger: s.hunger,
+        happiness: s.happiness,
+        health: s.health,
+      }),
+    },
   ),
 )

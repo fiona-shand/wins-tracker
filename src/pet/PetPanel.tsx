@@ -1,83 +1,19 @@
 import { motion, AnimatePresence } from 'motion/react'
-import { useEffect, useRef } from 'react'
 import { PetAvatar } from './PetAvatar'
 import './pet.css'
 import { moodFromStats, moodHint, usePetStore } from './petStore'
 
 type Props = {
-  dayKey: string
   doneCount: number
   total: number
   pct: number
   isToday: boolean
 }
 
-export function PetPanel({ dayKey, doneCount, total, pct, isToday }: Props) {
+export function PetPanel({ doneCount, total, pct, isToday }: Props) {
   const hunger = usePetStore((s) => s.hunger)
   const happiness = usePetStore((s) => s.happiness)
   const health = usePetStore((s) => s.health)
-  const boostFromHabit = usePetStore((s) => s.boostFromHabit)
-  const slightLetdown = usePetStore((s) => s.slightLetdown)
-  const decayMissedCare = usePetStore((s) => s.decayMissedCare)
-  const celebrateAllDone = usePetStore((s) => s.celebrateAllDone)
-  const idleRecover = usePetStore((s) => s.idleRecover)
-
-  const prevDone = useRef(doneCount)
-  const prevPct = useRef(pct)
-  const lastDayKey = useRef(dayKey)
-
-  useEffect(() => {
-    if (lastDayKey.current !== dayKey) {
-      lastDayKey.current = dayKey
-      prevDone.current = doneCount
-      prevPct.current = pct
-    }
-  }, [dayKey, doneCount, pct])
-
-  useEffect(() => {
-    if (!isToday) {
-      prevDone.current = doneCount
-      return
-    }
-    if (doneCount > prevDone.current) {
-      boostFromHabit()
-    } else if (doneCount < prevDone.current) {
-      slightLetdown()
-    }
-    prevDone.current = doneCount
-  }, [doneCount, isToday, boostFromHabit, slightLetdown])
-
-  useEffect(() => {
-    if (!isToday) {
-      prevPct.current = pct
-      return
-    }
-    if (
-      total > 0 &&
-      doneCount === total &&
-      prevPct.current < 100 &&
-      pct === 100
-    ) {
-      celebrateAllDone()
-    }
-    prevPct.current = pct
-  }, [doneCount, total, pct, isToday, celebrateAllDone])
-
-  useEffect(() => {
-    if (!isToday || total === 0 || doneCount >= total) return
-    const id = window.setInterval(() => {
-      decayMissedCare()
-    }, 40_000)
-    return () => window.clearInterval(id)
-  }, [isToday, total, doneCount, decayMissedCare])
-
-  useEffect(() => {
-    if (total !== 0) return
-    const id = window.setInterval(() => {
-      idleRecover()
-    }, 22_000)
-    return () => window.clearInterval(id)
-  }, [total, idleRecover])
 
   const mood = moodFromStats(hunger, happiness, health)
   const hint = moodHint[mood]
@@ -156,17 +92,12 @@ function Meter({
   value: number
   tone: 'hunger' | 'happy' | 'health'
 }) {
-  const w = Math.round(Math.max(0, Math.min(100, value)))
+  const w = Math.round(Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0)))
   return (
     <div className={`pet-meter pet-meter--${tone}`}>
       <span className="pet-meter-label">{label}</span>
       <div className="pet-meter-track">
-        <motion.div
-          className="pet-meter-fill"
-          initial={false}
-          animate={{ width: `${w}%` }}
-          transition={{ type: 'spring', stiffness: 200, damping: 22 }}
-        />
+        <div className="pet-meter-fill" style={{ width: `${w}%` }} />
       </div>
     </div>
   )

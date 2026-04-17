@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 import { HabitBankSheet } from './components/HabitBankSheet'
 import { TabBar } from './components/TabBar'
+import { PetCareSync } from './pet/PetCareSync'
 import { CalendarPage } from './pages/CalendarPage'
 import { HomePage } from './pages/HomePage'
 import { TrackerUiProvider } from './TrackerUiProvider'
@@ -27,6 +28,7 @@ function PhoneShell() {
 
   return (
     <div className="phone-screen">
+      <PetCareSync />
       <div className="phone-content">
         <Routes>
           <Route path="/" element={<HomePage />} />

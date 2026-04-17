@@ -1,17 +1,6 @@
-import {
-  CalendarDaysIcon,
-  CheckIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from '@heroicons/react/24/outline'
+import { CheckIcon } from '@heroicons/react/24/outline'
 import { useMemo } from 'react'
-import {
-  addDays,
-  dateKey,
-  formatNice,
-  isSameDay,
-  parseDateKey,
-} from '../dates'
+import { dateKey } from '../dates'
 import { useTrackerUi } from '../useTrackerUi'
 
 export function HomePage() {
@@ -21,12 +10,9 @@ export function HomePage() {
     toggleCompleted,
     setSheetOpen,
     viewDate,
-    setViewDate,
-    setCalMonthOverride,
   } = useTrackerUi()
 
   const dayKey = dateKey(viewDate)
-  const isToday = isSameDay(viewDate, new Date())
 
   const doneSet = useMemo(
     () => new Set(completions[dayKey] ?? []),
@@ -44,7 +30,6 @@ export function HomePage() {
     <div className="app">
       <div className="shell">
         <header className="brand">
-          <div className="brand-badge">Daily module</div>
           <h1>Tiny Wins</h1>
           <p className="copy-prose">
             {total === 0 ? (
@@ -73,115 +58,6 @@ export function HomePage() {
             )}
           </p>
         </header>
-
-        <div className="bento-stack">
-          <section
-            className="date-card bento-tile bento-tile--sky"
-            aria-label="Choose day"
-          >
-            <div className="date-row">
-              <div className="date-nav">
-                <button
-                  type="button"
-                  className="icon-btn"
-                  aria-label="Previous day"
-                  onClick={() => {
-                    setCalMonthOverride(null)
-                    setViewDate((d) => addDays(d, -1))
-                  }}
-                >
-                  <ChevronLeftIcon className="icon-btn-glyph" aria-hidden />
-                </button>
-                <button
-                  type="button"
-                  className="icon-btn"
-                  aria-label="Next day"
-                  onClick={() => {
-                    setCalMonthOverride(null)
-                    setViewDate((d) => addDays(d, 1))
-                  }}
-                >
-                  <ChevronRightIcon className="icon-btn-glyph" aria-hidden />
-                </button>
-              </div>
-              <div className="date-label">
-                <strong>{formatNice(viewDate)}</strong>
-                <span>
-                  {isToday
-                    ? 'Your list for today'
-                    : `Checking ${parseDateKey(dayKey).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`}
-                </span>
-              </div>
-            </div>
-            {isToday ? (
-              <div className="today-pill" role="status">
-                <CalendarDaysIcon className="today-pill-icon" aria-hidden />
-                Today
-              </div>
-            ) : (
-              <div style={{ marginTop: '0.65rem', textAlign: 'center' }}>
-                <button
-                  type="button"
-                  className="ghost-btn"
-                  style={{ width: '100%', maxWidth: 200, margin: '0 auto' }}
-                  onClick={() => {
-                    setCalMonthOverride(null)
-                    setViewDate(new Date())
-                  }}
-                >
-                  Jump to today
-                </button>
-              </div>
-            )}
-          </section>
-
-          {trackedHabits.length > 0 && (
-            <div className="progress-bento bento-tile bento-tile--sage">
-              <div className="progress-block">
-                <p className="copy-prose" style={{ margin: '0 0 0.65rem' }}>
-                  Session status:{' '}
-                  <span className="inline-badge inline-badge--green">
-                    {doneCount} cleared
-                  </span>
-                  {pct === 100 ? (
-                    <>
-                      {' '}
-                      ·{' '}
-                      <span className="inline-badge inline-badge--rose">
-                        full sweep
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {' '}
-                      ·{' '}
-                      <span className="inline-badge inline-badge--slate">
-                        {total - doneCount} left
-                      </span>
-                    </>
-                  )}
-                </p>
-                <div className="progress-top">
-                  <span>
-                    {doneCount} of {total} wins
-                  </span>
-                  <em>{pct}%</em>
-                </div>
-                <div className="progress-track" aria-hidden>
-                  <div
-                    className={`progress-fill ${pct === 100 && total > 0 ? 'all-done' : ''}`}
-                    style={{ width: `${pct}%` }}
-                  />
-                </div>
-                {pct === 100 && total > 0 && (
-                  <p className="celebrate">
-                    You did it — today is officially sparkly! ✨
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
 
         {trackedHabits.length === 0 ? (
           <div className="empty-card">

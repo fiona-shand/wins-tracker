@@ -119,6 +119,9 @@
   height: 100%;
   border-radius: 9999px;
   max-width: 100%;
+  width: 0;
+  min-width: 0;
+  transition: width 0.5s cubic-bezier(0.34, 1.15, 0.64, 1);
 }
 
 .pet-meter--hunger .pet-meter-fill {
@@ -153,23 +156,98 @@
   border: 0;
 }
 
+.app-pet-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.app-pet-page .shell--pet {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 0.65rem;
+}
+
+.app-pet-page .brand--pet {
+  margin-bottom: 0.45rem;
+  flex-shrink: 0;
+}
+
 .app-pet-page .pet-page-note {
-  margin: 0 0 0.85rem;
+  margin: 0 0 0.5rem;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   font-weight: 500;
   color: var(--ink-soft);
-  line-height: 1.5;
+  line-height: 1.45;
+  flex-shrink: 0;
+}
+
+.app-pet-page .pet-page-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-pet-page .pet-page-panel .pet-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 0;
+  padding: 1rem 1rem 1.15rem;
+}
+
+.app-pet-page .pet-panel-head {
+  flex-shrink: 0;
+}
+
+.app-pet-page .pet-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.35rem;
 }
 
 .app-pet-page .pet-page-panel .pet-avatar {
-  width: 132px;
+  width: min(78vw, 260px);
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: min(52vh, 320px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.app-pet-page .pet-page-panel .pet-panel-body {
-  gap: 1rem;
+.app-pet-page .pet-scene {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.app-pet-page .pet-lottie-wrap {
+  min-height: 140px;
+  max-height: min(48vh, 300px);
+  aspect-ratio: 1;
+}
+
+.app-pet-page .pet-lottie-canvas {
+  max-height: min(48vh, 300px) !important;
+}
+
+.app-pet-page .pet-meters {
+  width: 100%;
+  max-width: 22rem;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.app-pet-page .pet-cheer {
+  flex-shrink: 0;
 }
