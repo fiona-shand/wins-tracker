@@ -1,0 +1,26 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  font-family:
+    'Jost',
+    Futura,
+    'Century Gothic',
+    'Trebuchet MS',
+    system-ui,
+    sans-serif;
+  font-optical-sizing: auto;
+}
+
+#root {
+  min-height: 100svh;
+}
