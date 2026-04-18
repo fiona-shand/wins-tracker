@@ -31,29 +31,38 @@ export function HomePage() {
       <div className="shell">
         <header className="brand brand--home">
           <h1>Tiny Wins</h1>
-          <p className="copy-prose">
+          <p className="copy-prose copy-prose--stacked">
             {total === 0 ? (
               <>
-                You&apos;re in{' '}
-                <span className="inline-badge inline-badge--slate">setup</span> — open{' '}
-                <span className="inline-badge inline-badge--blue">Habits</span> and turn
-                on{' '}
-                <span className="inline-badge inline-badge--blue">3–5</span> you&apos;ll
-                actually run today.
+                <span className="brand-prose-line">
+                  You&apos;re in{' '}
+                  <span className="inline-badge inline-badge--slate">setup</span> — open{' '}
+                  <span className="inline-badge inline-badge--blue">Habits</span>
+                </span>
+                <span className="brand-prose-line">
+                  Turn on{' '}
+                  <span className="inline-badge inline-badge--blue">3–5</span> you&apos;ll
+                  actually run today.
+                </span>
               </>
             ) : (
               <>
-                On deck today:{' '}
-                <span className="inline-badge inline-badge--blue">
-                  {total} habit{total === 1 ? '' : 's'}
+                <span className="brand-prose-line">
+                  On deck today:{' '}
+                  <span className="inline-badge inline-badge--blue">
+                    {total} habit{total === 1 ? '' : 's'}
+                  </span>
+                  .
                 </span>
-                . Clear{' '}
-                <span className="inline-badge inline-badge--green">
-                  {doneCount} of {total}
-                </span>{' '}
-                for{' '}
-                <span className="inline-badge inline-badge--yellow">{pct}%</span> of the
-                bar.
+                <span className="brand-prose-line">
+                  Clear{' '}
+                  <span className="inline-badge inline-badge--green">
+                    {doneCount} of {total}
+                  </span>{' '}
+                  for{' '}
+                  <span className="inline-badge inline-badge--yellow">{pct}%</span> of the
+                  bar.
+                </span>
               </>
             )}
           </p>

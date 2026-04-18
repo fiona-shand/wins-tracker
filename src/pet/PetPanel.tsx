@@ -10,13 +10,16 @@ type Props = {
   isToday: boolean
 }
 
+const ASLEEP_HINT = 'Snoozing… add habits on Today to wake me up.'
+
 export function PetPanel({ doneCount, total, pct, isToday }: Props) {
   const hunger = usePetStore((s) => s.hunger)
   const happiness = usePetStore((s) => s.happiness)
   const health = usePetStore((s) => s.health)
 
   const mood = moodFromStats(hunger, happiness, health)
-  const hint = moodHint[mood]
+  const asleep = total === 0
+  const hint = asleep ? ASLEEP_HINT : moodHint[mood]
 
   return (
     <section className="pet-panel" aria-label="Buddy">
@@ -24,9 +27,9 @@ export function PetPanel({ doneCount, total, pct, isToday }: Props) {
         <p className="pet-panel-sub copy-prose">
           {total === 0 ? (
             <>
-              Link{' '}
-              <span className="inline-badge inline-badge--blue">habits</span> on Today —
-              then every check-in hits my{' '}
+              I&apos;m still napping — link{' '}
+              <span className="inline-badge inline-badge--blue">habits</span> on Today so
+              check-ins can wake me and fill my{' '}
               <span className="inline-badge inline-badge--green">meters</span>.
             </>
           ) : !isToday ? (
@@ -50,7 +53,12 @@ export function PetPanel({ doneCount, total, pct, isToday }: Props) {
       </div>
 
       <div className="pet-panel-body">
-        <PetAvatar hunger={hunger} happiness={happiness} health={health} />
+        <PetAvatar
+          hunger={hunger}
+          happiness={happiness}
+          health={health}
+          asleep={asleep}
+        />
 
         <div className="pet-meters" aria-label="Buddy needs">
           <Meter label="Full" value={hunger} tone="hunger" />

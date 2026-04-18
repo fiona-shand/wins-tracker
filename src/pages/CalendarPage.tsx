@@ -57,20 +57,21 @@ export function CalendarPage() {
       <div className="shell">
         <header className="brand brand--calendar">
           <h1>Star calendar</h1>
-          <p className="copy-prose">
-            <span className="inline-badge inline-badge--yellow">⭐</span> marks a day when
-            you closed{' '}
-            <span className="inline-badge inline-badge--green">every habit</span> on your
-            list.
+          <p className="copy-prose copy-prose--stacked">
+            <span className="brand-prose-line">
+              <span className="inline-badge inline-badge--yellow">⭐</span> marks a day when
+              you closed{' '}
+              <span className="inline-badge inline-badge--green">every habit</span> on your
+              list.
+            </span>
             {habitIdsOnList.length > 0 && (
-              <>
-                {' '}
+              <span className="brand-prose-line">
                 This month:{' '}
                 <span className="inline-badge inline-badge--blue">
                   {starDaysThisMonth} star{starDaysThisMonth === 1 ? '' : 's'}
                 </span>
                 .
-              </>
+              </span>
             )}
           </p>
         </header>

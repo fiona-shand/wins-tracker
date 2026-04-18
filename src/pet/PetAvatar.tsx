@@ -6,13 +6,15 @@ type Props = {
   hunger: number
   happiness: number
   health: number
+  asleep?: boolean
 }
 
-export function PetAvatar({ hunger, happiness, health }: Props) {
+export function PetAvatar({ hunger, happiness, health, asleep }: Props) {
   const mood = moodFromStats(hunger, happiness, health)
 
-  const bodyAnim =
-    mood === 'bliss'
+  const bodyAnim = asleep
+    ? { y: [0, 3, 0], rotate: [0, 1.5, 0], scale: [1, 1.02, 1] }
+    : mood === 'bliss'
       ? { y: [0, -6, 0], rotate: [0, 1.2, -1.2, 0] }
       : mood === 'happy'
         ? { y: [0, -4, 0] }
@@ -24,13 +26,15 @@ export function PetAvatar({ hunger, happiness, health }: Props) {
               ? { x: [0, -2, 2, -1, 0], rotate: [-1.5, 1.5, -1, 0] }
               : { x: [0, -4, 4, -3, 3, 0], rotate: [-3, 3, -2, 0] }
 
-  const bodyTransition =
-    mood === 'critical' || mood === 'rough'
+  const bodyTransition = asleep
+    ? { duration: 3.5, repeat: Infinity, ease: 'easeInOut' as const }
+    : mood === 'critical' || mood === 'rough'
       ? { duration: 0.45, repeat: mood === 'critical' ? Infinity : 2 }
       : { duration: 2.4, repeat: Infinity, ease: 'easeInOut' as const }
 
-  const filter =
-    mood === 'critical'
+  const filter = asleep
+    ? 'saturate(0.9) brightness(0.96)'
+    : mood === 'critical'
       ? 'saturate(0.7) brightness(0.94)'
       : mood === 'rough'
         ? 'saturate(0.88)'
@@ -38,7 +42,7 @@ export function PetAvatar({ hunger, happiness, health }: Props) {
 
   return (
     <motion.div
-      key={mood}
+      key={asleep ? 'asleep' : mood}
       className="pet-avatar"
       animate={bodyAnim}
       transition={bodyTransition}
@@ -46,7 +50,7 @@ export function PetAvatar({ hunger, happiness, health }: Props) {
     >
       <div className="pet-scene">
         <div className="pet-buddy-wrap">
-          <ExpressiveBuddy mood={mood} />
+          <ExpressiveBuddy mood={mood} asleep={asleep} />
         </div>
       </div>
     </motion.div>

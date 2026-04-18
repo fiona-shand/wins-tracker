@@ -4,6 +4,8 @@ import type { PetMood } from './petStore'
 
 type Props = {
   mood: PetMood
+  /** No habits on the list — buddy is asleep until you add some. */
+  asleep?: boolean
 }
 
 const mouthD: Record<PetMood, string> = {
@@ -16,12 +18,95 @@ const mouthD: Record<PetMood, string> = {
   critical: 'M 26 58 L 36 66 L 50 56 L 64 66 L 74 58',
 }
 
-export function ExpressiveBuddy({ mood }: Props) {
+export function ExpressiveBuddy({ mood, asleep }: Props) {
   const raw = useId().replace(/:/g, '')
   const gBody = `buddy-body-${raw}`
   const gBlush = `buddy-blush-${raw}`
 
   const mouthStroke = mood === 'meh' ? 2.4 : mood === 'critical' ? 2.6 : 2.2
+
+  if (asleep) {
+    return (
+      <svg className="pet-buddy-svg" viewBox="0 0 100 100" aria-hidden>
+        <defs>
+          <linearGradient id={gBody} x1="0.15" y1="0" x2="0.85" y2="1">
+            <stop offset="0%" stopColor="#ffe8f3" />
+            <stop offset="45%" stopColor="#f8b8d8" />
+            <stop offset="100%" stopColor="#e895be" />
+          </linearGradient>
+        </defs>
+        <motion.ellipse
+          cx={50}
+          cy={57}
+          fill={`url(#${gBody})`}
+          stroke="rgba(10,10,10,0.11)"
+          strokeWidth={1}
+          initial={false}
+          animate={{
+            rx: [37, 38.5, 37],
+            ry: [33, 34.2, 33],
+            cy: [57, 57.5, 57],
+          }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <g stroke="#141414" strokeWidth={2} strokeLinecap="round" fill="none">
+          <path d="M 33 46 Q 40 44 47 46" opacity={0.85} />
+          <path d="M 53 46 Q 60 44 67 46" opacity={0.85} />
+        </g>
+        <ellipse
+          cx={50}
+          cy={58.5}
+          rx={3.2}
+          ry={2.6}
+          fill="none"
+          stroke="#141414"
+          strokeWidth={1.85}
+          opacity={0.75}
+        />
+        <motion.g
+          initial={{ opacity: 0.25 }}
+          animate={{ opacity: [0.25, 0.55, 0.25] }}
+          transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <text
+            x={72}
+            y={30}
+            fill="#141414"
+            fontSize={11}
+            fontWeight={700}
+            fontFamily="system-ui, sans-serif"
+            style={{ userSelect: 'none' }}
+          >
+            z
+          </text>
+          <text
+            x={79}
+            y={23}
+            fill="#141414"
+            fontSize={9}
+            fontWeight={700}
+            fontFamily="system-ui, sans-serif"
+            opacity={0.85}
+            style={{ userSelect: 'none' }}
+          >
+            z
+          </text>
+          <text
+            x={85}
+            y={17}
+            fill="#141414"
+            fontSize={7}
+            fontWeight={700}
+            fontFamily="system-ui, sans-serif"
+            opacity={0.7}
+            style={{ userSelect: 'none' }}
+          >
+            z
+          </text>
+        </motion.g>
+      </svg>
+    )
+  }
 
   return (
     <svg className="pet-buddy-svg" viewBox="0 0 100 100" aria-hidden>
